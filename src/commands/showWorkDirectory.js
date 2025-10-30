@@ -1,5 +1,5 @@
-import { homedir } from "node:os";
+import { currentPath } from "../utils.js";
 
 export const showWorkDirectory = () => {
- console.log(`You are currently in ${homedir()}`);
+ console.log(`You are currently in ${currentPath}`);
 };
