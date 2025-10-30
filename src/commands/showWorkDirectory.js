@@ -1,5 +1,5 @@
-import { cwd } from "node:process";
+import { homedir } from "node:os";
 
 export const showWorkDirectory = () => {
- console.log(`You are currently in ${cwd()}`);
+ console.log(`You are currently in ${homedir()}`);
 };
