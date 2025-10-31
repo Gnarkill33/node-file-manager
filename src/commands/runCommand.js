@@ -1,4 +1,4 @@
-import { dirname, isAbsolute, join } from "node:path";
+import { dirname, isAbsolute, resolve } from "node:path";
 import { chdir, cwd } from "node:process";
 
 export const runCommand = (userInput) => {
@@ -11,16 +11,17 @@ export const runCommand = (userInput) => {
    chdir(parentDir);
    break;
   }
+
   case "cd": {
    if (arg.length === 0) return;
+
    const targetDir = arg[0];
-   let newPath;
-   if (isAbsolute(targetDir)) {
-    newPath = targetDir;
-   } else {
-    newPath = resolve(currentPath, targetDir);
-   }
-   setCurrentPath(newPath);
+
+   const newPath = isAbsolute(targetDir)
+    ? targetDir
+    : resolve(cwd(), targetDir);
+
+   chdir(newPath);
    break;
   }
   default: {
