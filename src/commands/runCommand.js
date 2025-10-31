@@ -1,7 +1,8 @@
-import { dirname, isAbsolute, resolve } from "node:path";
+import { basename, dirname, isAbsolute, resolve } from "node:path";
 import { chdir, cwd, stdout } from "node:process";
-import { readdir, writeFile, mkdir, rename } from "node:fs/promises";
-import { createReadStream } from "node:fs";
+import { readdir, writeFile, mkdir, rename, access } from "node:fs/promises";
+import { pipeline } from "node:stream/promises";
+import { createReadStream, createWriteStream } from "node:fs";
 import { checkType } from "../utils.js";
 
 export const runCommand = async (userInput) => {
@@ -107,6 +108,27 @@ export const runCommand = async (userInput) => {
    const targetName = resolve(cwd(), arg[1]);
 
    await rename(sourceName, targetName);
+
+   break;
+  }
+
+  case "cp": {
+   if (arg.length !== 2) {
+    console.log("Invalid input");
+    break;
+   }
+
+   const sourceFileName = resolve(cwd(), arg[0]);
+   const targetDirName = resolve(cwd(), arg[1]);
+   const targetFileName = resolve(targetDirName, basename(sourceFileName));
+
+   await access(sourceFileName);
+   await access(targetDirName);
+
+   const readStream = createReadStream(sourceFileName);
+   const writeStream = createWriteStream(targetFileName);
+
+   await pipeline(readStream, writeStream);
 
    break;
   }
