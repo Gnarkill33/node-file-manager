@@ -1,5 +1,5 @@
-import { currentPath } from "../utils.js";
+import { cwd } from "node:process";
 
 export const showWorkDirectory = () => {
- console.log(`You are currently in ${currentPath}`);
+ console.log(`You are currently in ${cwd()}`);
 };
