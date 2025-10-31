@@ -1,3 +1,4 @@
+import { stat } from "node:fs/promises";
 import { USERNAME_PREFIX, ANONYMOUS } from "./constants.js";
 
 export const getUsername = () => {
@@ -7,4 +8,20 @@ export const getUsername = () => {
  if (!username) return ANONYMOUS;
 
  return username.replace(USERNAME_PREFIX, "") || ANONYMOUS;
+};
+
+export const checkType = async (path) => {
+ try {
+  const stats = await stat(path);
+
+  if (stats.isFile()) {
+   return "file";
+  } else if (stats.isDirectory()) {
+   return "directory";
+  } else {
+   return "other";
+  }
+ } catch (err) {
+  console.error(err);
+ }
 };
