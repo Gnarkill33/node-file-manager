@@ -1,6 +1,6 @@
 import { dirname, isAbsolute, resolve } from "node:path";
 import { chdir, cwd, stdout } from "node:process";
-import { readdir, writeFile, mkdir } from "node:fs/promises";
+import { readdir, writeFile, mkdir, rename } from "node:fs/promises";
 import { createReadStream } from "node:fs";
 import { checkType } from "../utils.js";
 
@@ -31,11 +31,14 @@ export const runCommand = async (userInput) => {
   }
 
   case "ls": {
-   if (arg.length !== 0) console.log("Invalid input");
+   if (arg.length !== 0) {
+    console.log("Invalid input");
+    break;
+   }
 
    const currentDir = cwd();
 
-   const dirContent = await readdir(currentDir, { withFileTypes: true });
+   const dirContent = await readdir(currentDir);
 
    const filesToShow = await Promise.all(
     dirContent.map(async (item) => {
@@ -91,6 +94,20 @@ export const runCommand = async (userInput) => {
    const dirPath = resolve(cwd(), arg[0]);
 
    await mkdir(dirPath, { recursive: false });
+   break;
+  }
+
+  case "rn": {
+   if (arg.length !== 2) {
+    console.log("Invalid input");
+    break;
+   }
+
+   const sourceName = resolve(cwd(), arg[0]);
+   const targetName = resolve(cwd(), arg[1]);
+
+   await rename(sourceName, targetName);
+
    break;
   }
 
