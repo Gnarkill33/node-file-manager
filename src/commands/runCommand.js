@@ -9,6 +9,8 @@ export const runCommand = async (userInput) => {
 
  switch (command) {
   case "up": {
+   if (arg.length !== 0) console.log("Invalid input");
+
    const parentDir = dirname(cwd());
 
    chdir(parentDir);
@@ -16,7 +18,7 @@ export const runCommand = async (userInput) => {
   }
 
   case "cd": {
-   if (arg.length === 0) return;
+   if (arg.length !== 1) console.log("Invalid input");
 
    const targetDir = arg[0];
 
@@ -29,6 +31,8 @@ export const runCommand = async (userInput) => {
   }
 
   case "ls": {
+   if (arg.length !== 0) console.log("Invalid input");
+
    const currentDir = cwd();
 
    const dirContent = await readdir(currentDir, { withFileTypes: true });
@@ -48,7 +52,7 @@ export const runCommand = async (userInput) => {
   }
 
   case "cat": {
-   if (arg.length === 0) return;
+   if (arg.length !== 1) console.log("Invalid input");
 
    const targetFile = resolve(cwd(), arg[0]);
 
