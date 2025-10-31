@@ -15,7 +15,7 @@ export const startCommandLine = () => {
     await runCommand(userInput);
    }
   } catch {
-   console.log("Something went wrong");
+   console.log("Operation failed");
   } finally {
    showWorkDirectory();
   }

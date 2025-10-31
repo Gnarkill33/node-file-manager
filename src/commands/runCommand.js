@@ -1,6 +1,6 @@
 import { dirname, isAbsolute, resolve } from "node:path";
 import { chdir, cwd, stdout } from "node:process";
-import { readdir, writeFile } from "node:fs/promises";
+import { readdir, writeFile, mkdir } from "node:fs/promises";
 import { createReadStream } from "node:fs";
 import { checkType } from "../utils.js";
 
@@ -82,6 +82,15 @@ export const runCommand = async (userInput) => {
    } catch {
     console.log("Operation failed");
    }
+   break;
+  }
+
+  case "mkdir": {
+   if (arg.length !== 1) console.log("Invalid input");
+
+   const dirPath = resolve(cwd(), arg[0]);
+
+   await mkdir(dirPath, { recursive: false });
    break;
   }
 
