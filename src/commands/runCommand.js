@@ -1,7 +1,8 @@
 import { dirname, isAbsolute, resolve } from "node:path";
-import { chdir, cwd } from "node:process";
+import { chdir, cwd, stdout } from "node:process";
 import { readdir } from "node:fs/promises";
 import { checkType } from "../utils.js";
+import { createReadStream } from "node:fs";
 
 export const runCommand = async (userInput) => {
  const [command, ...arg] = userInput.trim().split(" ");
@@ -43,6 +44,27 @@ export const runCommand = async (userInput) => {
    const sortedFiles = filesToShow.sort((a, b) => a.Type.localeCompare(b.Type));
 
    console.table(sortedFiles);
+   break;
+  }
+
+  case "cat": {
+   if (arg.length === 0) return;
+
+   const targetFile = resolve(cwd(), arg[0]);
+
+   const readableStream = createReadStream(targetFile, { encoding: "utf8" });
+   readableStream.on("data", (chunk) => {
+    stdout.write(chunk);
+   });
+
+   readableStream.on("end", () => {
+    console.log();
+   });
+
+   readableStream.on("error", () => {
+    console.log("Operation failed");
+   });
+
    break;
   }
 
