@@ -40,7 +40,9 @@ export const runCommand = async (userInput) => {
     })
    );
 
-   console.table(filesToShow);
+   const sortedFiles = filesToShow.sort((a, b) => a.Type.localeCompare(b.Type));
+
+   console.table(sortedFiles);
    break;
   }
 
