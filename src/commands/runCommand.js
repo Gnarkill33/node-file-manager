@@ -1,4 +1,4 @@
-import { basename, dirname, isAbsolute, resolve } from "node:path";
+import { basename, dirname, isAbsolute, resolve, join } from "node:path";
 import { chdir, cwd, stdout } from "node:process";
 import {
  readdir,
@@ -11,6 +11,7 @@ import {
 import { pipeline } from "node:stream/promises";
 import { createReadStream, createWriteStream } from "node:fs";
 import { createHash } from "node:crypto";
+import { createBrotliCompress, createBrotliDecompress } from "node:zlib";
 import { runOsCommand } from "./runOsCommand.js";
 import { availableOsCommands, checkType } from "../utils.js";
 
@@ -181,6 +182,23 @@ export const runCommand = async (userInput) => {
     console.log(hexHash);
    });
 
+   break;
+  }
+
+  case "compress": {
+   if (arg.length !== 2) console.log("Invalid input");
+
+   const [source, destination] = arg;
+   const sourceFileName = resolve(cwd(), source);
+   const targetDirName = join(
+    resolve(cwd(), destination),
+    basename(sourceFileName) + ".br"
+   );
+
+   const readableStream = createReadStream(sourceFileName);
+   const writableStream = createWriteStream(targetDirName);
+
+   await pipeline(readableStream, createBrotliCompress(), writableStream);
    break;
   }
 
