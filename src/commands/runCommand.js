@@ -213,6 +213,10 @@ export const runCommand = async (userInput) => {
    break;
   }
 
+  case ".exit": {
+   process.exit();
+  }
+
   default: {
    console.log("Invalid input");
   }
