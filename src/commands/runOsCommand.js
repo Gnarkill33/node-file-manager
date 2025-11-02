@@ -1,10 +1,9 @@
-import { homedir, EOL, userInfo } from "node:os";
+import { homedir, EOL, userInfo, arch } from "node:os";
 
 export const runOsCommand = (osCommand) => {
  switch (osCommand) {
   case "--homedir": {
-   const homeDir = homedir();
-   console.log(homeDir);
+   console.log(homedir());
    break;
   }
 
@@ -17,6 +16,11 @@ export const runOsCommand = (osCommand) => {
    const { username } = userInfo();
 
    console.log(username);
+   break;
+  }
+
+  case "--architecture": {
+   console.log(arch());
    break;
   }
 
