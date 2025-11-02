@@ -10,6 +10,7 @@ import {
 } from "node:fs/promises";
 import { pipeline } from "node:stream/promises";
 import { createReadStream, createWriteStream } from "node:fs";
+import { runOsCommand } from "./runOsCommand.js";
 import { checkType } from "../utils.js";
 
 export const runCommand = async (userInput) => {
@@ -148,6 +149,14 @@ export const runCommand = async (userInput) => {
    await access(filename);
 
    await rm(filename);
+
+   break;
+  }
+
+  case "os": {
+   if (arg.length !== 1) console.log("Invalid input");
+
+   runOsCommand(arg);
 
    break;
   }
