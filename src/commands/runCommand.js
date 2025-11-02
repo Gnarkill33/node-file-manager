@@ -10,6 +10,7 @@ import {
 } from "node:fs/promises";
 import { pipeline } from "node:stream/promises";
 import { createReadStream, createWriteStream } from "node:fs";
+import { createHash } from "node:crypto";
 import { runOsCommand } from "./runOsCommand.js";
 import { availableOsCommands, checkType } from "../utils.js";
 
@@ -159,6 +160,26 @@ export const runCommand = async (userInput) => {
    }
 
    runOsCommand(arg[0]);
+
+   break;
+  }
+
+  case "hash": {
+   if (arg.length !== 1) console.log("Invalid input");
+
+   const sourceFileName = resolve(cwd(), arg[0]);
+
+   const hash = createHash("sha256");
+   const readableStream = createReadStream(sourceFileName);
+
+   readableStream.on("data", (chunk) => {
+    hash.update(chunk);
+   });
+
+   readableStream.on("end", () => {
+    const hexHash = hash.digest("hex");
+    console.log(hexHash);
+   });
 
    break;
   }
