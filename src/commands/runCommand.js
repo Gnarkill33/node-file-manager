@@ -155,6 +155,25 @@ export const runCommand = async (userInput) => {
    break;
   }
 
+  case "mv": {
+   if (arg.length !== 2) console.log("Invalid input");
+
+   const sourceFileName = resolve(cwd(), arg[0]);
+   const targetDirName = resolve(cwd(), arg[1]);
+   const targetFileName = resolve(targetDirName, basename(sourceFileName));
+
+   await access(sourceFileName);
+   await access(targetDirName);
+
+   const readStream = createReadStream(sourceFileName);
+   const writeStream = createWriteStream(targetFileName);
+   await pipeline(readStream, writeStream);
+
+   await rm(sourceFileName);
+
+   break;
+  }
+
   case "os": {
    if (arg.length !== 1 || !availableOsCommands.includes(arg[0])) {
     console.log("Invalid input");
