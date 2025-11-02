@@ -10,10 +10,10 @@ import {
 } from "node:fs/promises";
 import { pipeline } from "node:stream/promises";
 import { createReadStream, createWriteStream } from "node:fs";
-import { createHash } from "node:crypto";
 import { createBrotliCompress, createBrotliDecompress } from "node:zlib";
 import { runOsCommand } from "./runOsCommand.js";
 import { availableOsCommands, checkType } from "../utils.js";
+import { calculateHash } from "./calculateHash.js";
 
 export const runCommand = async (userInput) => {
  const [command, ...arg] = userInput.trim().split(" ");
@@ -189,17 +189,7 @@ export const runCommand = async (userInput) => {
 
    const sourceFileName = resolve(cwd(), arg[0]);
 
-   const hash = createHash("sha256");
-   const readableStream = createReadStream(sourceFileName);
-
-   readableStream.on("data", (chunk) => {
-    hash.update(chunk);
-   });
-
-   readableStream.on("end", () => {
-    const hexHash = hash.digest("hex");
-    console.log(hexHash);
-   });
+   await calculateHash(sourceFileName);
 
    break;
   }
