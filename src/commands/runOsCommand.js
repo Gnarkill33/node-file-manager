@@ -1,4 +1,4 @@
-import { homedir, EOL, userInfo, arch } from "node:os";
+import { homedir, EOL, userInfo, arch, cpus } from "node:os";
 
 export const runOsCommand = (osCommand) => {
  switch (osCommand) {
@@ -21,6 +21,19 @@ export const runOsCommand = (osCommand) => {
 
   case "--architecture": {
    console.log(arch());
+   break;
+  }
+
+  case "--cpus": {
+   const cpuInfo = cpus();
+
+   console.log(`Overall amount of CPUs: ${cpuInfo.length}`);
+
+   cpuInfo.forEach((cpu, index) => {
+    console.log(
+     `CPU ${index + 1}: ${cpu.model.trim()} — ${cpu.speed / 1000} GHz`
+    );
+   });
    break;
   }
 
