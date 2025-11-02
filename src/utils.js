@@ -25,3 +25,11 @@ export const checkType = async (path) => {
   console.error(err);
  }
 };
+
+export const availableOsCommands = [
+ "--EOL",
+ "--cpus",
+ "--homedir",
+ "--username",
+ "--architecture",
+];

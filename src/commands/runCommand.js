@@ -11,7 +11,7 @@ import {
 import { pipeline } from "node:stream/promises";
 import { createReadStream, createWriteStream } from "node:fs";
 import { runOsCommand } from "./runOsCommand.js";
-import { checkType } from "../utils.js";
+import { availableOsCommands, checkType } from "../utils.js";
 
 export const runCommand = async (userInput) => {
  const [command, ...arg] = userInput.trim().split(" ");
@@ -154,9 +154,11 @@ export const runCommand = async (userInput) => {
   }
 
   case "os": {
-   if (arg.length !== 1) console.log("Invalid input");
+   if (arg.length !== 1 || !availableOsCommands.includes(arg[0])) {
+    console.log("Invalid input");
+   }
 
-   runOsCommand(arg);
+   runOsCommand(arg[0]);
 
    break;
   }

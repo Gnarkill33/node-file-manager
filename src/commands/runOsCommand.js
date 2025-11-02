@@ -1,13 +1,15 @@
-import { homedir } from "node:os";
+import { homedir, EOL } from "node:os";
 
-export const runOsCommand = (arg) => {
- const [command] = arg;
- const osCommand = command.replace(/^--/, "");
-
+export const runOsCommand = (osCommand) => {
  switch (osCommand) {
-  case "homedir": {
+  case "--homedir": {
    const homeDir = homedir();
    console.log(homeDir);
+   break;
+  }
+
+  case "--EOL": {
+   console.log(JSON.stringify(EOL));
    break;
   }
 
