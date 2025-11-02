@@ -1,4 +1,4 @@
-import { basename, dirname, isAbsolute, resolve, join } from "node:path";
+import { basename, dirname, isAbsolute, resolve } from "node:path";
 import { chdir, cwd, stdout } from "node:process";
 import {
  readdir,
@@ -190,15 +190,26 @@ export const runCommand = async (userInput) => {
 
    const [source, destination] = arg;
    const sourceFileName = resolve(cwd(), source);
-   const targetDirName = join(
-    resolve(cwd(), destination),
-    basename(sourceFileName) + ".br"
-   );
+   const targetDirName = resolve(cwd(), destination, basename(sourceFileName));
 
    const readableStream = createReadStream(sourceFileName);
    const writableStream = createWriteStream(targetDirName);
 
    await pipeline(readableStream, createBrotliCompress(), writableStream);
+   break;
+  }
+
+  case "decompress": {
+   if (arg.length !== 2) console.log("Invalid input");
+
+   const [source, destination] = arg;
+   const sourceFileName = resolve(cwd(), source);
+   const targetDirName = resolve(cwd(), destination, basename(sourceFileName));
+
+   const readableStream = createReadStream(sourceFileName);
+   const writableStream = createWriteStream(targetDirName);
+
+   await pipeline(readableStream, createBrotliDecompress(), writableStream);
    break;
   }
 
